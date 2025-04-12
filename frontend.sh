@@ -1,31 +1,29 @@
-#!bin/bash  
-#set-hostname frontend
-echo "installing nginx"
-dnf install nginx -y  &>> /tmp/frontend.log
-if [$? -eq 0]; then
-  echo "Nginx installed successfully"
-else
-  echo "Nginx installation failed"
-  exit 1
-fi
-echo "enabling nginx"
-systemctl enable nginx &>> /tmp/frontend.log
-if[ $? -eq 0]; then
-  echo "Nginx enabled successfully"
-else
-  echo "Nginx enabling failed"
-  exit 1
-fi
-echo "starting nginx"
-systemctl start nginx &>> /tmp/frontend.log
-if[ $? -eq 0]; then
-  echo "Nginx started successfully"
-else
-  echo "Nginx starting failed"
-  exit 1
-fi
-#rm -rf /usr/share/nginx/html/* 
-#curl -o /tmp/frontend.zip https://expense-web-app.s3.amazonaws.com/frontend.zip
-#unzip /tmp/frontend.zip -d /usr/share/nginx/html
-#systemctl restart nginx
-#systemctl restart nginx
+
+source common.sh                                                         # Importing common functions from common.sh
+echo -n "Installing Nginx:"
+dnf install nginx -y     &>> $logFile
+stat $?
+
+echo -n "Configuring Proxy:"
+cp expense.conf /etc/nginx/default.d/expense.conf  &>> $logFile
+stat $?
+
+echo -n "Clearning Old $component Content:"
+rm -rf /usr/share/nginx/html/* 
+stat $?
+
+echo -n "Downloading $component Content:"
+curl -o /tmp/$component.zip https://expense-web-app.s3.amazonaws.com/$component.zip &>> $logFile
+stat $?
+
+echo -n "Extracting $component Content:"
+cd /usr/share/nginx/html 
+unzip -o /tmp/$component.zip &>> $logFile
+stat $?
+
+echo -n "Restarting Nginx:"
+systemctl enable nginx   &>> $logFile
+systemctl restart nginx 
+stat $?
+
+echo -n "*****  $component Execution Completed  *****"
