@@ -1,4 +1,4 @@
-
+#!/bin/bash
 source common.sh                                                         # Importing common functions from common.sh
 echo -n "Installing Nginx:"
 dnf install nginx -y     &>> $logFile
