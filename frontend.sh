@@ -1,5 +1,8 @@
 #!/bin/bash
-source ./common.sh                                            
+
+component=frontend
+
+source common.sh                                                         # Importing common functions from common.sh
 echo -n "Installing Nginx:"
 dnf install nginx -y     &>> $logFile
 stat $?
@@ -15,8 +18,8 @@ stat $?
 echo -n "Downloading $component Content:"
 curl -o /tmp/$component.zip https://expense-web-app.s3.amazonaws.com/$component.zip &>> $logFile
 stat $?
+
 echo -n "Extracting $component Content:"
-mkdir -p /usr/share/nginx/html
 cd /usr/share/nginx/html 
 unzip -o /tmp/$component.zip &>> $logFile
 stat $?
