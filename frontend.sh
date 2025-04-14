@@ -1,5 +1,5 @@
 #!/bin/bash
-common.sh                                            
+source ./common.sh                                            
 echo -n "Installing Nginx:"
 dnf install nginx -y     &>> $logFile
 stat $?
