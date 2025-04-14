@@ -64,4 +64,4 @@ systemctl enable backend &>> $logFile
 systemctl start backend  &>> $logFile
 stat $? 
 
-echo -n "*  $component Execution Completed  **"
+echo -n "**  $component Execution Completed  **"
